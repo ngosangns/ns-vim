@@ -1,9 +1,2 @@
-*
-!.gitignore
-!readme.md
-!init.lua
-!lazy-lock.json
-!/lua
-!/lua/**
-!/screenshots
-!/screenshots/*
+lazy-lock.json
+.DS_Store

@@ -1,47 +1,57 @@
--- Icons + statusline + file explorer + symbol outline.
--- Replaces: ryanoasis/vim-devicons (archived, dropped) +
--- kyazdani42/nvim-web-devicons (repo renamed) -> nvim-tree/nvim-web-devicons
--- itchyny/lightline.vim + maximbaz/lightline-ale -> lualine.nvim
--- coc-explorer -> nvim-tree.lua
--- vista.vim / CocList outline (never actually installed) -> aerial.nvim
+-- UI tweaks on top of LazyVim defaults.
+-- LazyVim already includes: bufferline, lualine, noice, nvim-notify,
+-- which-key, dashboard, indent-blankline, mini.icons, nvim-web-devicons.
 return {
+  -- Gitsigns: enable inline blame (VS Code GitLens-style)
   {
-    "nvim-tree/nvim-web-devicons",
-    lazy = true,
+    "lewis6991/gitsigns.nvim",
+    opts = {
+      current_line_blame = true,
+      current_line_blame_opts = {
+        virt_text = true,
+        virt_text_pos = "eol",
+        delay = 500,
+      },
+      current_line_blame_formatter = "<author>, <author_time:%R> - <summary>",
+    },
   },
+
+  -- Bufferline: slant separator style (more VS Code-like)
   {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "akinsho/bufferline.nvim",
     opts = {
       options = {
-        theme = "onedark",
-        globalstatus = true,
-      },
-      sections = {
-        lualine_c = { { "filename", path = 1 } },
-        lualine_x = { "diagnostics", "encoding", "fileformat", "filetype" },
+        separator_style = "slant",
+        show_close_icon = false,
       },
     },
   },
+
+  -- Lualine: catppuccin theme
   {
-    "nvim-tree/nvim-tree.lua",
-    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-lualine/lualine.nvim",
     opts = {
-      view = { width = 34 },
-      renderer = { group_empty = true, icons = { git_placement = "before" } },
-      filters = { dotfiles = false },
-      git = { enable = true },
+      options = {
+        theme = "catppuccin",
+      },
     },
   },
+
+  -- Dashboard header override
   {
-    "stevearc/aerial.nvim",
-    cmd = { "AerialToggle" },
-    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-    opts = {
-      backends = { "lsp", "treesitter", "markdown", "man" },
-      layout = { min_width = 30 },
-    },
+    "nvimdev/dashboard-nvim",
+    opts = function(_, opts)
+      local logo = [[
+ ███╗   ██╗███████╗      ██╗   ██╗██╗███╗   ███╗
+ ████╗  ██║██╔════╝      ██║   ██║██║████╗ ████║
+ ██╔██╗ ██║███████╗█████╗██║   ██║██║██╔████╔██║
+ ██║╚██╗██║╚════██║╚════╝╚██╗ ██╔╝██║██║╚██╔╝██║
+ ██║ ╚████║███████║       ╚████╔╝ ██║██║ ╚═╝ ██║
+ ╚═╝  ╚═══╝╚══════╝        ╚═══╝  ╚═╝╚═╝     ╚═╝
+      ]]
+      logo = string.rep("\n", 4) .. logo .. "\n\n"
+      opts.config = opts.config or {}
+      opts.config.header = vim.split(logo, "\n")
+    end,
   },
 }

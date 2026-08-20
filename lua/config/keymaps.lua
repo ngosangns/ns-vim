@@ -1,85 +1,73 @@
--- Keymaps. Ported 1:1 from the old MapBoth()-based mappings in init.vim.
--- MapBoth used recursive `map` (not `noremap`) across n/i/v/c/t, with an
--- <Esc><Esc> prefix in insert/visual/cmdline and <LeftMouse> in terminal
--- mode; that's replicated here via vim.keymap.set(..., { remap = true }).
-local function map_both(keys, rhs)
-  local opts = { remap = true, silent = true }
-  vim.keymap.set("n", keys, rhs, opts)
-  vim.keymap.set("i", keys, "<Esc><Esc>" .. rhs, opts)
-  vim.keymap.set("v", keys, "<Esc><Esc>" .. rhs, opts)
-  vim.keymap.set("c", keys, "<Esc><Esc>" .. rhs, { remap = true })
-  vim.keymap.set("t", keys, "<LeftMouse>" .. rhs, opts)
-end
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here
 
--- Undo / redo
-map_both("<C-z>", ":undo<CR>")
-map_both("<C-y>", ":redo<CR>")
--- Tabs
-map_both("<A-Left>", ":tabprev<CR>")
-map_both("<A-Right>", ":tabnext<CR>")
-map_both("<C-n>", ":tabnew<CR>")
--- Window navigation
-map_both("<C-S-Up>", ":wincmd k<CR>")
-map_both("<C-S-Down>", ":wincmd j<CR>")
-map_both("<C-S-Left>", ":wincmd h<CR>")
-map_both("<C-S-Right>", ":wincmd l<CR>")
--- Search
-map_both("<C-f>", "/")
--- New line
-map_both("<A-CR>", "o")
--- Close window/tab
-map_both("<C-w>", ":q!<CR>")
--- Fast jump
-map_both("<C-Up>", "5k")
-map_both("<C-Down>", "5j")
-map_both("<C-Left>", "10h")
-map_both("<C-Right>", "10l")
--- Command mode
-map_both("<C-\\>", "<Esc><Esc>:")
-vim.keymap.set("i", "<C-.>", "<C-o>", { remap = true })
--- Copy / cut / paste
-map_both("<C-c>", "yy")
-vim.keymap.set("v", "<C-c>", "ygv", { remap = true })
-map_both("<C-x>", "dd")
-vim.keymap.set("v", "<C-x>", "d", { remap = true })
-map_both("<C-v>", "P")
-vim.keymap.set("v", "<C-v>", "gp", { remap = true })
--- Select all
-map_both("<C-a>", "ggVG$")
--- Save
-map_both("<C-s>", ":w<CR>")
--- Backspace / enter / tab (effective behaviour of the original file, where
--- the later `nmap <BS> i<BS>` overrode the earlier nohlsearch mapping)
-vim.keymap.set("v", "<BS>", '"_d', { remap = true })
-vim.keymap.set("n", "<BS>", "i<BS>", { remap = true })
-vim.keymap.set("n", "<CR>", "i<CR>", { remap = true })
-vim.keymap.set("n", "<Tab>", "i<Tab>", { remap = true })
-vim.keymap.set("v", "<Tab>", ">gv", { remap = true })
-map_both("<S-Tab>", "<<")
-vim.keymap.set("v", "<S-Tab>", "<gv", { remap = true })
+local map = vim.keymap.set
 
--- LSP
-map_both("<F12>", "<Cmd>lua vim.lsp.buf.definition()<CR>")
-vim.keymap.set({ "n", "v" }, "<leader>f", function()
-  require("conform").format({ async = true, lsp_fallback = true })
-end, { silent = true, desc = "Format selection/buffer" })
--- Outline
-map_both("<C-r>", ":AerialToggle<CR>")
--- Comment (native Neovim gc/gcc, no plugin needed)
-vim.keymap.set("n", "<C-_>", "gcc", { remap = true, silent = true })
-vim.keymap.set("x", "<C-_>", "gc", { remap = true, silent = true })
--- Fuzzy find files
-map_both("<C-p>", ":Telescope find_files<CR>")
--- Exit vim
-map_both("<C-d>", ":qa!<CR>")
--- File explorer
-map_both("<C-b>", ":NvimTreeToggle<CR>")
+-- VS Code-style shortcuts (on top of LazyVim's defaults which already include
+-- bufferline, telescope, terminal, etc.)
 
--- Move out of a visual selection with arrow keys
-vim.keymap.set("v", "<Left>", "<Esc>`<<Left>")
-vim.keymap.set("v", "<Up>", "<Esc>`<<Up>")
-vim.keymap.set("v", "<Right>", "<Esc>`><Right>")
-vim.keymap.set("v", "<Down>", "<Esc>`><Down>")
+-- Save (Ctrl+S) — LazyVim already maps this
+-- Undo/Redo (Ctrl+Z/Y)
+map({ "n", "i", "v" }, "<C-z>", "<cmd>undo<cr>", { desc = "Undo" })
+map({ "n", "i", "v" }, "<C-y>", "<cmd>redo<cr>", { desc = "Redo" })
 
--- Visually select the text that was last edited/pasted
-vim.keymap.set("n", "gV", "'`[' . strpart(getregtype(), 0, 1) . '`]'", { expr = true })
+-- Select all (Ctrl+A)
+map({ "n", "i", "v" }, "<C-a>", "<esc>ggVG", { desc = "Select all" })
+
+-- Copy/Cut/Paste (Ctrl+C/X/V)
+map("n", "<C-c>", "yy", { desc = "Copy line" })
+map("v", "<C-c>", "ygv", { desc = "Copy selection" })
+map("n", "<C-x>", "dd", { desc = "Cut line" })
+map("v", "<C-x>", "d", { desc = "Cut selection" })
+
+-- Duplicate line (Shift+Alt+Down/Up) — VS Code style
+map("n", "<S-A-Down>", ":t.<CR>", { silent = true, desc = "Duplicate line down" })
+map("n", "<S-A-Up>", ":t.-1<CR>", { silent = true, desc = "Duplicate line up" })
+map("v", "<S-A-Down>", ":t'>.<CR>gv", { silent = true, desc = "Duplicate selection down" })
+map("v", "<S-A-Up>", ":t'<.-1<CR>gv", { silent = true, desc = "Duplicate selection up" })
+
+-- Find files (Ctrl+P) — LazyVim uses <leader>ff, add Ctrl+P alias
+map("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
+
+-- Search in project (Ctrl+Shift+F / Ctrl+F)
+map("n", "<C-f>", "<cmd>Telescope live_grep<cr>", { desc = "Search in project" })
+
+-- Toggle file explorer (Ctrl+B)
+map("n", "<C-b>", function()
+  Snacks.explorer()
+end, { desc = "Toggle file explorer" })
+
+-- Toggle terminal (Ctrl+`) — LazyVim uses <C-/> and <C-_>, add Ctrl+` too
+map("n", "<C-`>", function()
+  Snacks.terminal()
+end, { desc = "Toggle terminal" })
+map("t", "<C-`>", "<cmd>close<cr>", { desc = "Close terminal" })
+
+-- Comment (Ctrl+/) — LazyVim already maps this via mini.comment or ts-context-commentstring
+
+-- Close buffer (Ctrl+W) — override default window close
+map("n", "<C-w>", function()
+  Snacks.bufdelete()
+end, { desc = "Close buffer" })
+
+-- New buffer (Ctrl+N)
+map("n", "<C-n>", "<cmd>enew<cr>", { desc = "New buffer" })
+
+-- Buffer tabs navigation (Alt+Left/Right)
+map("n", "<A-Left>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
+map("n", "<A-Right>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
+
+-- Fast scroll
+map({ "n", "v" }, "<C-Up>", "5k", { desc = "Fast up" })
+map({ "n", "v" }, "<C-Down>", "5j", { desc = "Fast down" })
+
+-- Outline (Ctrl+R)
+map("n", "<C-r>", "<cmd>Outline<cr>", { desc = "Toggle outline" })
+
+-- Exit Neovim (Ctrl+D)
+map("n", "<C-d>", "<cmd>qa!<cr>", { desc = "Exit Neovim" })
+
+-- Tab/Shift+Tab indent in visual mode
+map("v", "<Tab>", ">gv", { desc = "Indent" })
+map("v", "<S-Tab>", "<gv", { desc = "Unindent" })

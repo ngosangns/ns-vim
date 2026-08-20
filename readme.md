@@ -1,91 +1,131 @@
-# ngosangns-vim-configure
+# ns-vim
 
-Modern Neovim config: [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager, native LSP
-(`nvim-lspconfig` + `mason.nvim`), Treesitter, Telescope. No Vimscript plugin manager, no
-`coc.nvim` — everything is Lua under `lua/`.
+Modern Neovim config based on **[LazyVim](https://lazyvim.org)** — designed to feel like
+**VS Code / Zed** with all the speed of Vim.
 
-## Plugins
+LazyVim provides the full IDE experience out of the box: LSP, completion, telescope,
+bufferline, lualine, noice, treesitter, formatting, linting, git integration, and more.
+This config adds VS Code-style keymaps and preferences on top.
 
-| Purpose | Plugin |
+## What's Included (via LazyVim + custom overrides)
+
+| VS Code / Zed Feature | How it works |
 | --- | --- |
-| Colorscheme | `navarasu/onedark.nvim` |
-| Statusline | `nvim-lualine/lualine.nvim` |
-| Icons | `nvim-tree/nvim-web-devicons` |
-| File explorer | `nvim-tree/nvim-tree.lua` |
-| Symbol outline | `stevearc/aerial.nvim` |
-| Fuzzy finder | `nvim-telescope/telescope.nvim` (+ `telescope-fzf-native.nvim`) |
-| Git blame/diff/commit | `tpope/vim-fugitive` |
+| Dark theme (Mocha) | `catppuccin/nvim` (mocha flavour) |
+| Tab bar | `akinsho/bufferline.nvim` (slant style) |
+| Status bar | `nvim-lualine/lualine.nvim` |
+| File explorer sidebar | `neo-tree.nvim` (LazyVim default) |
+| Symbol outline | Built-in via LazyVim |
+| Command palette | `folke/noice.nvim` (floating cmdline) |
+| Ctrl+P file finder | `nvim-telescope/telescope.nvim` |
+| Ctrl+F search in project | Telescope live_grep |
+| Integrated terminal | Snacks.terminal (Ctrl+`) |
+| Git blame (GitLens) | `lewis6991/gitsigns.nvim` (inline blame) |
 | Git gutter signs | `lewis6991/gitsigns.nvim` |
-| Surround text objects | `kylechui/nvim-surround` |
-| Commenting | native Neovim `gc`/`gcc` (0.10+, no plugin) |
-| Syntax/indent | `nvim-treesitter/nvim-treesitter` (`master` branch) |
-| LSP | `neovim/nvim-lspconfig` + `mason.nvim` + `mason-lspconfig.nvim` |
-| Completion | `saghen/blink.cmp` |
-| Formatting | `stevearc/conform.nvim` |
+| Indent guides | `lukas-reineke/indent-blankline.nvim` |
+| Bracket auto-close | `windwp/nvim-autopairs` |
+| Highlight references | `vim-illuminate` (LazyVim default) |
+| TODO highlights | `folke/todo-comments.nvim` |
+| Problems panel | `folke/trouble.nvim` |
+| Color preview | `norcalli/nvim-colorizer.lua` |
+| Smooth scrolling | `karb94/neoscroll.nvim` |
+| Notifications (toast) | `rcarriga/nvim-notify` |
+| Keybinding hints | `folke/which-key.nvim` |
+| Welcome/Start page | `nvimdev/dashboard-nvim` |
+| F2 rename | LazyVim inc-rename |
+| Move lines Alt+↑/↓ | LazyVim default + custom |
+| Duplicate lines | Custom keymaps |
+| Format on save | `stevearc/conform.nvim` |
 | Linting | `mfussenegger/nvim-lint` |
+| LSP + completion | `nvim-lspconfig` + `blink.cmp` |
+| Snippets | `rafamadriz/friendly-snippets` |
+| Flash/Jump motions | `folke/flash.nvim` |
+| Surround | `echasnovski/mini.surround` |
 
 ## Requirements
 
-- **Neovim >= 0.11** (uses `vim.lsp.config`/`vim.lsp.enable`)
+- **Neovim >= 0.11**
 - `git`, a C compiler and `curl`/`tar` in `PATH` (Treesitter parser builds)
 - A [Nerd Font](https://www.nerdfonts.com/) patched font in your terminal
-- Optional formatter/linter binaries on `PATH` for the languages you use:
+- `ripgrep` (for Telescope live_grep)
+- Optional formatter/linter binaries on `PATH`:
   `stylua`, `goimports`, `prettierd`/`prettier`, `eslint_d`
-- macOS + Xcode toolchain if you want Swift LSP (`sourcekit-lsp`, detected automatically)
 
 ## Setup
 
 ```sh
 # Remove old config
-rm -rf ~/.config/nvim
+rm -rf ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
+
 # Clone this config
 git clone https://github.com/ngosangns/ngosangns-vim-configure ~/.config/nvim
 ```
 
-Open `nvim`. `lazy.nvim` bootstraps itself and installs every plugin on first launch.
-LSP servers listed in `lua/plugins/lsp.lua` (`ensure_installed`) install automatically via Mason;
-run `:Mason` to manage servers manually, `:LspInstall <server>` to add more.
+Open `nvim`. lazy.nvim bootstraps itself, installs LazyVim + all plugins on first launch.
+LSP servers install automatically via Mason.
 
-Enjoy!
+## Key Mappings (VS Code style)
 
-## Key mappings (all modes unless noted)
+LazyVim provides extensive default keymaps (press `<Space>` to see which-key menu).
+These VS Code overrides are added on top:
 
-Exit vim: `Ctrl + d`
+### General
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl+S` | Save |
+| `Ctrl+Z` | Undo |
+| `Ctrl+Y` | Redo |
+| `Ctrl+A` | Select all |
+| `Ctrl+C` | Copy (line / selection) |
+| `Ctrl+X` | Cut (line / selection) |
+| `Ctrl+D` | Exit Neovim |
 
-Text behavior:
-- Copy: `Ctrl + c`
-- Paste: `Ctrl + v`
-- New line: `Alt + Enter`
-- Cut: `Ctrl + x`
-- Format buffer/selection: `\ + f`
-- Undo: `Ctrl + z`
-- Redo: `Ctrl + y`
-- Select all: `Ctrl + a`
-- Comment line/selection: `Ctrl + /`
+### Navigation & Panels
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl+P` | Find files |
+| `Ctrl+F` | Search in project (live grep) |
+| `Ctrl+B` | Toggle file explorer |
+| `Ctrl+R` | Toggle symbol outline |
+| `Ctrl+`` ` | Toggle integrated terminal |
+| `Alt+Left/Right` | Switch buffer tab |
+| `Ctrl+N` | New buffer |
+| `Ctrl+W` | Close buffer |
 
-Navigation:
-- Fast move: `Ctrl + Arrow`
-- Switch tab: `Alt + Left|Right`
-- Close tab/window: `Ctrl + w`
-- New tab: `Ctrl + n`
-- Go to command mode: `Ctrl + \`
-- Go to definition: `F12`
+### Editing
+| Shortcut | Action |
+| --- | --- |
+| `Alt+Up/Down` | Move line(s) up/down (LazyVim default) |
+| `Shift+Alt+Up/Down` | Duplicate line(s) |
+| `Tab` (visual) | Indent |
+| `Shift+Tab` | Unindent |
+| `<leader>cf` | Format buffer |
 
-File explorer (`nvim-tree`):
-- Toggle: `Ctrl + b`
+### LazyVim Leader Key (`Space`)
+| Shortcut | Action |
+| --- | --- |
+| `Space` | Which-key menu (all commands) |
+| `Space f` | Find/File menu |
+| `Space g` | Git menu |
+| `Space l` | LSP menu |
+| `Space x` | Diagnostics/Trouble |
+| `Space s` | Search menu |
 
-File contents:
-- Toggle symbol outline: `Ctrl + r`
-- Find files: `Ctrl + p`
-- Search text: `Ctrl + f`
-- Save file: `Ctrl + s`
-
-## Managing LSP servers
+## File Structure
 
 ```
-:Mason           " browse/install/remove servers, formatters, linters
-:LspInstall <name>
-:checkhealth lsp
+init.lua                  -- Entry point (just loads config.lazy)
+lua/
+├── config/
+│   ├── lazy.lua          -- lazy.nvim bootstrap + LazyVim import
+│   ├── options.lua       -- Custom options (tabs, scroll, etc.)
+│   ├── keymaps.lua       -- VS Code-style keymaps
+│   └── autocmds.lua      -- Custom autocmds
+└── plugins/
+    ├── colorscheme.lua   -- Catppuccin Mocha theme
+    ├── editor.lua        -- Colorizer, neoscroll, autopairs
+    ├── lang.lua          -- Language extras (TS, Go, etc.)
+    └── ui.lua            -- Git blame, bufferline style, dashboard
 ```
 
 ## Screenshots

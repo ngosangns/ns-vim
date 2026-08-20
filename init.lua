@@ -1,5 +1,2 @@
--- Entry point. All real config lives under lua/config and lua/plugins.
-require("config.options")
-require("config.keymaps")
-require("config.autocmds")
+-- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")

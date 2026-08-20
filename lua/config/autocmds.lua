@@ -1,44 +1,14 @@
--- Session persistence and cursor restore, ported from init.vim.
-local session_file = vim.fn.expand("~/.vim/.last.session")
+-- Autocmds are automatically loaded on the VeryLazy event
+-- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
+-- Add any additional autocmds here
 
-if not vim.g.rc_restore_last_session then
-  vim.g.rc_restore_last_session = 0
-end
-
-local group = vim.api.nvim_create_augroup
-
-vim.api.nvim_create_autocmd("VimLeave", {
-  group = group("rc_save_session", { clear = true }),
+-- Remove trailing whitespace on save (VS Code: trim trailing whitespace)
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("ns_trim_whitespace", { clear = true }),
+  pattern = "*",
   callback = function()
-    vim.cmd("mksession! " .. vim.fn.fnameescape(session_file))
-  end,
-})
-
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = group("rc_restore_session", { clear = true }),
-  callback = function()
-    if vim.g.rc_restore_last_session == 1 and vim.fn.filereadable(session_file) == 1 then
-      vim.cmd("source " .. vim.fn.fnameescape(session_file))
-    end
-  end,
-})
-
-if vim.fn.filereadable(session_file) == 1 then
-  vim.keymap.set("n", "<Leader>r", function()
-    vim.cmd("source " .. vim.fn.fnameescape(session_file))
-  end, { silent = true })
-end
-
--- Return to last edit position when opening files
-vim.api.nvim_create_autocmd("BufReadPost", {
-  group = group("rc_last_edit_position", { clear = true }),
-  callback = function()
-    if vim.bo.filetype:match("commit") then
-      return
-    end
-    local mark = vim.fn.line("'\"")
-    if mark >= 1 and mark <= vim.fn.line("$") then
-      vim.cmd('normal! g`"')
-    end
+    local save_cursor = vim.fn.getpos(".")
+    vim.cmd([[%s/\s\+$//e]])
+    vim.fn.setpos(".", save_cursor)
   end,
 })
