@@ -1,93 +1,95 @@
 # ngosangns-vim-configure
 
+Modern Neovim config: [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager, native LSP
+(`nvim-lspconfig` + `mason.nvim`), Treesitter, Telescope. No Vimscript plugin manager, no
+`coc.nvim` — everything is Lua under `lua/`.
+
 ## Plugins
-```
-Plug 'joshdick/onedark.vim'
-Plug 'itchyny/lightline.vim'
-Plug 'dense-analysis/ale'
-Plug 'maximbaz/lightline-ale'
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'ryanoasis/vim-devicons'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'kyazdani42/nvim-web-devicons'
-```
+
+| Purpose | Plugin |
+| --- | --- |
+| Colorscheme | `navarasu/onedark.nvim` |
+| Statusline | `nvim-lualine/lualine.nvim` |
+| Icons | `nvim-tree/nvim-web-devicons` |
+| File explorer | `nvim-tree/nvim-tree.lua` |
+| Symbol outline | `stevearc/aerial.nvim` |
+| Fuzzy finder | `nvim-telescope/telescope.nvim` (+ `telescope-fzf-native.nvim`) |
+| Git blame/diff/commit | `tpope/vim-fugitive` |
+| Git gutter signs | `lewis6991/gitsigns.nvim` |
+| Surround text objects | `kylechui/nvim-surround` |
+| Commenting | native Neovim `gc`/`gcc` (0.10+, no plugin) |
+| Syntax/indent | `nvim-treesitter/nvim-treesitter` (`master` branch) |
+| LSP | `neovim/nvim-lspconfig` + `mason.nvim` + `mason-lspconfig.nvim` |
+| Completion | `saghen/blink.cmp` |
+| Formatting | `stevearc/conform.nvim` |
+| Linting | `mfussenegger/nvim-lint` |
+
+## Requirements
+
+- **Neovim >= 0.11** (uses `vim.lsp.config`/`vim.lsp.enable`)
+- `git`, a C compiler and `curl`/`tar` in `PATH` (Treesitter parser builds)
+- A [Nerd Font](https://www.nerdfonts.com/) patched font in your terminal
+- Optional formatter/linter binaries on `PATH` for the languages you use:
+  `stylua`, `goimports`, `prettierd`/`prettier`, `eslint_d`
+- macOS + Xcode toolchain if you want Swift LSP (`sourcekit-lsp`, detected automatically)
 
 ## Setup
-**Required: NeoVim**
-```
-sudo apt-get install neovim
-```
 
-Open Terminal and run following commands (these commands will make you lost all your current config of Vim!):
-```
+```sh
 # Remove old config
-sudo rm -rf ~/.config/nvim
-# Clone configs from repo to config path of Vim
+rm -rf ~/.config/nvim
+# Clone this config
 git clone https://github.com/ngosangns/ngosangns-vim-configure ~/.config/nvim
-# Install c-tags for outline
-sudo apt-get install universal-ctags
-# Install vim-plug package manager of Vim
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-# Install NERD fonts
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Go-Mono.zip
-sudo mkdir /usr/share/fonts/nerdfonts
-sudo unzip Go-Mono.zip -d /usr/share/fonts/nerdfonts
-rm -rf Go-Mono.zip
-fc-cache -fv
 ```
-Open neovim with command: `nvim`.  
-Run vim command `:PlugInstall`.  
-Restart vim.   
-Run vim command `:CocInstall coc-html coc-css coc-json coc-tsserver coc-sourcekit coc-go coc-explorer`
 
-Enjoy!  
+Open `nvim`. `lazy.nvim` bootstraps itself and installs every plugin on first launch.
+LSP servers listed in `lua/plugins/lsp.lua` (`ensure_installed`) install automatically via Mason;
+run `:Mason` to manage servers manually, `:LspInstall <server>` to add more.
 
-## Key mappings (all mode)
-Exit vim: `Ctrl + d`  
+Enjoy!
+
+## Key mappings (all modes unless noted)
+
+Exit vim: `Ctrl + d`
 
 Text behavior:
 - Copy: `Ctrl + c`
 - Paste: `Ctrl + v`
 - New line: `Alt + Enter`
 - Cut: `Ctrl + x`
-- Format: `\ + f`
+- Format buffer/selection: `\ + f`
 - Undo: `Ctrl + z`
 - Redo: `Ctrl + y`
 - Select all: `Ctrl + a`
-- Backspace: `Backspace`
-- Enter: `Enter`
-- Comment: `Ctrl + /`
+- Comment line/selection: `Ctrl + /`
 
 Navigation:
 - Fast move: `Ctrl + Arrow`
 - Switch tab: `Alt + Left|Right`
-- Close tab: `Ctrl + w`
+- Close tab/window: `Ctrl + w`
 - New tab: `Ctrl + n`
 - Go to command mode: `Ctrl + \`
 - Go to definition: `F12`
 
-File explorer:
-- Toggle file explorer: `Ctrl + b`
-- Open file in new tab: `t`
+File explorer (`nvim-tree`):
+- Toggle: `Ctrl + b`
 
 File contents:
-- Toggle file outline: `Ctrl + r`
+- Toggle symbol outline: `Ctrl + r`
 - Find files: `Ctrl + p`
 - Search text: `Ctrl + f`
 - Save file: `Ctrl + s`
 
-## Install LSP server with `coc`
+## Managing LSP servers
+
 ```
-:CocInstall <what-you-want>
-# Restart vim
+:Mason           " browse/install/remove servers, formatters, linters
+:LspInstall <name>
+:checkhealth lsp
 ```
 
 ## Screenshots
-![](./screenshots/1.png)  
-![](./screenshots/2.png)  
-![](./screenshots/3.png)  
+
+![](./screenshots/1.png)
+![](./screenshots/2.png)
+![](./screenshots/3.png)

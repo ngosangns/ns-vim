@@ -1,7 +1,9 @@
 *
 !.gitignore
 !readme.md
-!coc-settings.json
-!init.vim
+!init.lua
+!lazy-lock.json
+!/lua
+!/lua/**
 !/screenshots
 !/screenshots/*
