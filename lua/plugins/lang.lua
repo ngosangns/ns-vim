@@ -1,14 +1,6 @@
 -- Language/LSP configuration on top of LazyVim defaults.
 -- LazyVim already configures: lua_ls, JSON, and the base LSP infrastructure.
 return {
-  -- Extra language support via LazyVim extras
-  { import = "lazyvim.plugins.extras.lang.typescript" },
-  { import = "lazyvim.plugins.extras.lang.go" },
-  { import = "lazyvim.plugins.extras.lang.json" },
-  { import = "lazyvim.plugins.extras.lang.yaml" },
-  { import = "lazyvim.plugins.extras.lang.markdown" },
-  { import = "lazyvim.plugins.extras.lang.tailwind" },
-
   -- Additional LSP servers
   {
     "neovim/nvim-lspconfig",
@@ -38,7 +30,7 @@ return {
 
   -- Extra formatters/linters via Mason
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "stylua",

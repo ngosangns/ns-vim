@@ -27,16 +27,21 @@ map("n", "<S-A-Up>", ":t.-1<CR>", { silent = true, desc = "Duplicate line up" })
 map("v", "<S-A-Down>", ":t'>.<CR>gv", { silent = true, desc = "Duplicate selection down" })
 map("v", "<S-A-Up>", ":t'<.-1<CR>gv", { silent = true, desc = "Duplicate selection up" })
 
--- Find files (Ctrl+P) — LazyVim uses <leader>ff, add Ctrl+P alias
-map("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
+-- Find files (Ctrl+P)
+map("n", "<C-p>", function()
+  Snacks.picker.files()
+end, { desc = "Find files" })
 
--- Search in project (Ctrl+Shift+F / Ctrl+F)
-map("n", "<C-f>", "<cmd>Telescope live_grep<cr>", { desc = "Search in project" })
+-- Find in the current buffer (Ctrl+F) and search the project (Alt+F)
+map("n", "<C-f>", "/", { desc = "Find in buffer" })
+map("n", "<A-f>", function()
+  Snacks.picker.grep()
+end, { desc = "Search in project" })
 
--- Toggle file explorer (Ctrl+B)
-map("n", "<C-b>", function()
-  Snacks.explorer()
-end, { desc = "Toggle file explorer" })
+-- Command palette (Alt+P)
+map("n", "<A-p>", function()
+  Snacks.picker.commands()
+end, { desc = "Command palette" })
 
 -- Toggle terminal (Ctrl+`) — LazyVim uses <C-/> and <C-_>, add Ctrl+` too
 map("n", "<C-`>", function()
@@ -62,11 +67,16 @@ map("n", "<A-Right>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
 map({ "n", "v" }, "<C-Up>", "5k", { desc = "Fast up" })
 map({ "n", "v" }, "<C-Down>", "5j", { desc = "Fast down" })
 
--- Outline (Ctrl+R)
-map("n", "<C-r>", "<cmd>Outline<cr>", { desc = "Toggle outline" })
-
--- Exit Neovim (Ctrl+D)
-map("n", "<C-d>", "<cmd>qa!<cr>", { desc = "Exit Neovim" })
+-- LSP navigation and diagnostics
+map("n", "<C-r>", function()
+  Snacks.picker.lsp_symbols()
+end, { desc = "Document symbols" })
+map("n", "<F2>", vim.lsp.buf.rename, { desc = "Rename symbol" })
+map("n", "<F8>", function()
+  Snacks.picker.diagnostics()
+end, { desc = "Show problems" })
+map("n", "<F12>", vim.lsp.buf.definition, { desc = "Go to definition" })
+map("n", "<S-F12>", vim.lsp.buf.references, { desc = "Find references" })
 
 -- Tab/Shift+Tab indent in visual mode
 map("v", "<Tab>", ">gv", { desc = "Indent" })

@@ -32,7 +32,7 @@ return {
 
   -- Auto-pairs: use nvim-autopairs instead of mini.pairs for more VS Code-like behavior
   {
-    "echasnovski/mini.pairs",
+    "nvim-mini/mini.pairs",
     enabled = false, -- disable LazyVim's default
   },
   {

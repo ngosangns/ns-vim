@@ -20,7 +20,15 @@ require("lazy").setup({
     -- bufferline, lualine, noice, which-key, mini, flash, etc.)
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- import/override with your plugins
+    -- Language extras must load before local plugin overrides.
+    { import = "lazyvim.plugins.extras.lang.typescript" },
+    { import = "lazyvim.plugins.extras.lang.go" },
+    { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.lang.yaml" },
+    { import = "lazyvim.plugins.extras.lang.markdown" },
+    { import = "lazyvim.plugins.extras.lang.tailwind" },
+
+    -- Local plugin overrides
     { import = "plugins" },
   },
   defaults = {

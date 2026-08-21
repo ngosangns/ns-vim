@@ -14,7 +14,6 @@ This config adds VS Code-style keymaps and preferences on top.
 | Dark theme (Mocha) | `catppuccin/nvim` (mocha flavour) |
 | Tab bar | `akinsho/bufferline.nvim` (slant style) |
 | Status bar | `nvim-lualine/lualine.nvim` |
-| File explorer sidebar | `neo-tree.nvim` (LazyVim default) |
 | Symbol outline | Built-in via LazyVim |
 | Command palette | `folke/noice.nvim` (floating cmdline) |
 | Ctrl+P file finder | `nvim-telescope/telescope.nvim` |
@@ -78,19 +77,25 @@ These VS Code overrides are added on top:
 | `Ctrl+A` | Select all |
 | `Ctrl+C` | Copy (line / selection) |
 | `Ctrl+X` | Cut (line / selection) |
-| `Ctrl+D` | Exit Neovim |
 
-### Navigation & Panels
+### Navigation, LSP & Panels
 | Shortcut | Action |
 | --- | --- |
 | `Ctrl+P` | Find files |
-| `Ctrl+F` | Search in project (live grep) |
-| `Ctrl+B` | Toggle file explorer |
-| `Ctrl+R` | Toggle symbol outline |
+| `Ctrl+F` | Find in the current buffer |
+| `Alt+F` | Search in project |
+| `Alt+P` | Command palette |
+| `Ctrl+R` | Show document symbols |
 | `Ctrl+`` ` | Toggle integrated terminal |
 | `Alt+Left/Right` | Switch buffer tab |
 | `Ctrl+N` | New buffer |
 | `Ctrl+W` | Close buffer |
+| `F2` | Rename symbol |
+| `F8` | Show diagnostics / Problems |
+| `F12` | Go to definition |
+| `Shift+F12` | Find references |
+
+Terminal applications may not distinguish `Ctrl+Shift` letter chords consistently. `Alt+P` and `Alt+F` are portable alternatives for the VS Code command palette and project search.
 
 ### Editing
 | Shortcut | Action |

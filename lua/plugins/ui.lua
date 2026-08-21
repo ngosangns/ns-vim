@@ -2,6 +2,13 @@
 -- LazyVim already includes: bufferline, lualine, noice, nvim-notify,
 -- which-key, dashboard, indent-blankline, mini.icons, nvim-web-devicons.
 return {
+  {
+    "folke/snacks.nvim",
+    opts = {
+      explorer = { enabled = false },
+    },
+  },
+
   -- Gitsigns: enable inline blame (VS Code GitLens-style)
   {
     "lewis6991/gitsigns.nvim",
